@@ -5,18 +5,12 @@ import time
 
 pygame.init()
 
-# -------------------------------------------------------
-# SCREEN
-# -------------------------------------------------------
 WIDTH = 800
 HEIGHT = 600
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Mini Space Shooter FINAL")
 clock = pygame.time.Clock()
 
-# -------------------------------------------------------
-# IMAGES
-# -------------------------------------------------------
 player_img_original = pygame.image.load("spaceship.pod_.1.png")
 player_img = pygame.transform.scale(player_img_original, (80, 80))
 player_width = 80
@@ -27,70 +21,46 @@ ufo_img = pygame.transform.scale(ufo_img_original, (60, 40))
 ufo_width = 60
 ufo_height = 40
 
-# Boss = normal UFO'nun büyütülmüş hali
 boss_img = pygame.transform.scale(ufo_img_original, (160, 100))
 final_boss_img = pygame.transform.scale(ufo_img_original, (240, 150))
 
-# -------------------------------------------------------
-# PLAYER
-# -------------------------------------------------------
 player_x = WIDTH // 2 - player_width // 2
 player_y = HEIGHT - 120
 player_speed = 5
 
-# -------------------------------------------------------
-# BULLETS
-# -------------------------------------------------------
+
 bullets = []
 bullet_speed = 10
 bullet_offsets = [-20, 0, 20]
 
-# -------------------------------------------------------
-# UFO / LEVEL SYSTEM
-# -------------------------------------------------------
+
 ufo_list = []
-ufo_speed = 1.2     # UFO daha yavaş insin ✓
+ufo_speed = 1.2     
 ufo_spawn_rate = 45
 ufo_per_spawn = 1
 
 level = 1
 level_start_time = time.time()
 
-# -------------------------------------------------------
-# BOSS (Level 5)
-# -------------------------------------------------------
 boss_active = False
 boss_hp = 40
 boss_x = WIDTH // 2 - 80
 boss_y = -150
 boss_speed = 2
 
-# -------------------------------------------------------
-# FINAL BOSS (Level 8)
-# -------------------------------------------------------
 final_boss_active = False
 final_boss_hp = 120
 final_boss_x = WIDTH // 2 - 120
 final_boss_y = -200
 final_boss_speed = 2
 
-# -------------------------------------------------------
-# LIVES / GAME OVER
-# -------------------------------------------------------
 lives = 3
 game_over = False
 
-# -------------------------------------------------------
-# FONTS
-# -------------------------------------------------------
 font = pygame.font.SysFont("Arial", 28)
 big_font = pygame.font.SysFont("Arial", 64)
 small_font = pygame.font.SysFont("Arial", 22)
 
-
-# -------------------------------------------------------
-# FUNCTIONS
-# -------------------------------------------------------
 
 def fire_bullets():
     for off in bullet_offsets:
@@ -139,20 +109,14 @@ def update_spawn_by_level(lv):
     elif lv == 4: return 2
     elif lv == 5: return 1
     elif lv == 6: return 1
-    elif lv == 7: return 1   # LEVEL 7 ARTIK UFO İNDİRİYOR ✓
+    elif lv == 7: return 1   
     else: return 0
 
 
 spawn_ufos(1)
 
-# -------------------------------------------------------
-# MAIN GAME LOOP
-# -------------------------------------------------------
 while True:
 
-    # -------------------------------------------------------
-    # WIN SCREEN (Level 9)
-    # -------------------------------------------------------
     if level >= 9:
         screen.fill((0, 0, 0))
 
@@ -178,9 +142,6 @@ while True:
                         waiting = False
         continue
 
-    # -------------------------------------------------------
-    # GAME OVER SCREEN
-    # -------------------------------------------------------
     if game_over:
         screen.fill((0, 0, 0))
 
@@ -206,39 +167,28 @@ while True:
                         waiting = False
         continue
 
-    # -------------------------------------------------------
-    # LEVEL SYSTEM (Her 10 saniye)
-    # -------------------------------------------------------
     if time.time() - level_start_time > 10:
         level += 1
         level_start_time = time.time()
         ufo_per_spawn = update_spawn_by_level(level)
 
-        # Level 5 → mini boss
         if level == 5 and not boss_active:
             boss_active = True
             boss_hp = 40
             boss_x = WIDTH//2 - 80
             boss_y = -150
 
-        # Level 8 → FINAL BOSS
         if level == 8 and not final_boss_active:
             final_boss_active = True
             final_boss_hp = 120
             final_boss_x = WIDTH//2 - 120
             final_boss_y = -200
 
-    # -------------------------------------------------------
-    # SPAWN UFOs
-    # -------------------------------------------------------
     if not boss_active and not final_boss_active:
         if ufo_per_spawn > 0:
             if random.randint(1, ufo_spawn_rate) == 1:
                 spawn_ufos(ufo_per_spawn)
 
-    # -------------------------------------------------------
-    # EVENTS
-    # -------------------------------------------------------
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit(); sys.exit()
@@ -251,21 +201,14 @@ while True:
     if keys[pygame.K_RIGHT] and player_x < WIDTH - player_width:
         player_x += player_speed
 
-    # -------------------------------------------------------
-    # BULLET UPDATE
-    # -------------------------------------------------------
     for b in bullets[:]:
         b[1] -= bullet_speed
         if b[1] < -20:
             bullets.remove(b)
 
-    # -------------------------------------------------------
-    # UFO UPDATE
-    # -------------------------------------------------------
     for u in ufo_list[:]:
         u[1] += ufo_speed
 
-        # yere düşerse can gider
         if u[1] > HEIGHT:
             ufo_list.remove(u)
             lives -= 1
@@ -273,7 +216,6 @@ while True:
                 game_over = True
             continue
 
-        # UFO → player çarpışma
         if (player_x < u[0] + ufo_width and
             player_x + player_width > u[0] and
             player_y < u[1] + ufo_height and
@@ -285,16 +227,12 @@ while True:
                 game_over = True
             continue
 
-        # bullet → ufo
         for b in bullets[:]:
             if u[0] <= b[0] <= u[0]+ufo_width and u[1] <= b[1] <= u[1]+ufo_height:
                 bullets.remove(b)
                 ufo_list.remove(u)
                 break
 
-    # -------------------------------------------------------
-    # MINI BOSS (LEVEL 5)
-    # -------------------------------------------------------
     if boss_active:
         if boss_y < 60:
             boss_y += boss_speed
@@ -311,9 +249,6 @@ while True:
                     boss_active = False
                 break
 
-    # -------------------------------------------------------
-    # FINAL BOSS (LEVEL 8)
-    # -------------------------------------------------------
     if final_boss_active:
         if final_boss_y < 50:
             final_boss_y += 2
@@ -328,38 +263,30 @@ while True:
                 final_boss_hp -= 1
                 if final_boss_hp <= 0:
                     final_boss_active = False
-                    level = 9  # WIN!
+                    level = 9  
                 break
 
-    # -------------------------------------------------------
-    # DRAW
-    # -------------------------------------------------------
     screen.fill((0, 0, 0))
 
-    # UFOs
     for u in ufo_list:
         screen.blit(ufo_img, (u[0], u[1]))
 
-    # MINI BOSS
     if boss_active:
         screen.blit(boss_img, (boss_x, boss_y))
         screen.blit(font.render(f"BOSS HP: {boss_hp}", True, (255,100,100)), (WIDTH-200, 10))
 
-    # FINAL BOSS
     if final_boss_active:
         screen.blit(final_boss_img, (final_boss_x, final_boss_y))
         screen.blit(font.render(f"FINAL BOSS HP: {final_boss_hp}", True, (255,100,100)), (WIDTH-260, 50))
 
-    # Bullets
     for b in bullets:
         pygame.draw.rect(screen, (255,0,0), (b[0], b[1], 6, 12))
 
-    # Player
     screen.blit(player_img, (player_x, player_y))
 
-    # HUD
     screen.blit(font.render(f"LEVEL: {level}", True, (255,255,255)), (10, 40))
     screen.blit(font.render(f"LIVES: {lives}", True, (255,255,255)), (10, 10))
 
     pygame.display.update()
     clock.tick(60)
+
