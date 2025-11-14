@@ -1,0 +1,18 @@
+[project]
+name = "mini-space-shooter"
+version = "0.1.0"
+description = "Mini Space Shooter backend with FastAPI + LLM"
+authors = [{ name = "Ummu Bozdemir" }]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+
+[tool.ruff]
+select = ["E", "F"]
+line-length = 88
+
+[tool.ruff.format]
+quote-style = "double"
+
+[tool.uv]
