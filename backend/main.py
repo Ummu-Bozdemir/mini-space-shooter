@@ -18,3 +18,12 @@ def home():
 @app.get("/health")
 def health():
     return {"status": "ok"}
+
+
+@app.get("/level-info")
+def level_info():
+    return {
+        "max_level": 8,
+        "has_boss_levels": [4, 8],
+        "message": "Level information API is working!"
+    }
