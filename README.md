@@ -4,12 +4,14 @@ A 2D space shooter game developed as part of the Mega Task project.
 The game includes movement, enemy waves, level progression, boss fights, a health system, and final win/lose screens.
 A FastAPI backend and a basic automated test file are also included.
 
+
 Overview
 
 Mini Space Shooter is a simple arcade-style game built with Python and Pygame.
 The player controls a spaceship, shoots descending UFO enemies, and progresses through eight increasingly difficult levels.
 
 The project demonstrates game loop logic, collision detection, difficulty balancing, backend integration, and clean GitHub structure.
+
 
 Features
 
@@ -35,7 +37,9 @@ FastAPI backend deployed on Render
 
 Automated test file (tests/test_basic.py)
 
+
 Installation & Setup
+
 1. Clone the repository
 git clone https://github.com/Ummu-Bozdemir/mini-space-shooter
 cd mini-space-shooter
@@ -46,6 +50,7 @@ pip install -r requirements.txt
 3. Run the game
 python main.py
 
+
 Controls
 
 Left Arrow: Move left
@@ -53,6 +58,7 @@ Left Arrow: Move left
 Right Arrow: Move right
 
 Space: Shoot
+
 
 Backend (FastAPI)
 
@@ -65,8 +71,10 @@ Live backend deployment:
 
 https://mini-space-shooter-backend.onrender.com
 
+
 Running Tests
 pytest
+
 
 Project Links
 
