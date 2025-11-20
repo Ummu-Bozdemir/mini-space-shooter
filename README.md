@@ -51,32 +51,37 @@ https://mini-space-shooter-backend.onrender.com
 
 ## How to Run the Game Locally
 
-### 1. Clone the repository
-```bash
+1. Clone the repository
 git clone https://github.com/Ummu-Bozdemir/mini-space-shooter.git
 cd mini-space-shooter
+
 2. Install dependencies
-bash
-Kodu kopyala
 pip install -r requirements.txt
+
 3. Run the game
-bash
-Kodu kopyala
 python main.py
+
 Project Links
-GitHub Repository
+
+GitHub Repository:
 https://github.com/Ummu-Bozdemir/mini-space-shooter
 
-Medium Article
+Medium Article:
 https://medium.com/@ummuzdemir/building-my-mini-space-shooter-game-with-python-pygame-75c3dd06a2d3
 
-StudentHub Project Page
+StudentHub Project Page:
 https://student-hub.base44.app/projectdetail?id=6917a32617bca03c94f2c906
 
+Backend (Render) URL:
+https://mini-space-shooter-backend.onrender.com
+
 Tests
+
 A small automated test file is included in the tests/ folder.
+This ensures minimal project structure validation.
 
 Technologies Used
+
 Python 3
 
 Pygame
