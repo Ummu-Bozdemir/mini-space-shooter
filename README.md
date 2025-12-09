@@ -66,18 +66,23 @@ git clone https://github.com/Ummu-Bozdemir/mini-space-shooter.git
 cd mini-space-shooter
 pip install -r requirements.txt
 python main.py
+⚠️ Pygame windows are not supported in GitHub Codespaces.
+Run the game locally to view the game screen.
+
 Project Links
+GitHub Repository:
+https://github.com/Ummu-Bozdemir/mini-space-shooter
 
-GitHub: https://github.com/Ummu-Bozdemir/mini-space-shooter
+Backend (Render):
+https://mini-space-shooter-backend.onrender.com
 
-Backend: https://mini-space-shooter-backend.onrender.com
+Medium Article:
+https://medium.com/@ummuzdemir/building-my-mini-space-shooter-game-with-python-pygame-75c3dd06a2d3
 
-Medium: https://medium.com/@ummuzdemir/building-my-mini-space-shooter-game-with-python-pygame-75c3dd06a2d3
-
-StudentHub: https://student-hub.base44.app/projectdetail?id=6917a32617bca03c94f2c906
+StudentHub Project Page:
+https://student-hub.base44.app/projectdetail?id=6917a32617bca03c94f2c906
 
 Technologies Used
-
 Python 3
 
 Pygame
