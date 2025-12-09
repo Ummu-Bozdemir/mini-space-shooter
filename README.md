@@ -70,7 +70,7 @@ python main.py
  ---
 
  ## Project Links
- 
+
 GitHub Repository:
 https://github.com/Ummu-Bozdemir/mini-space-shooter
 
@@ -83,7 +83,10 @@ https://medium.com/@ummuzdemir/building-my-mini-space-shooter-game-with-python-p
 StudentHub Project Page:
 https://student-hub.base44.app/projectdetail?id=6917a32617bca03c94f2c906
 
-Technologies Used
+---
+
+## Technologies Used
+
 Python 3
 
 Pygame
