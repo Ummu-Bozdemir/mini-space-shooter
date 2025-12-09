@@ -2,6 +2,7 @@ import pygame
 import sys
 import random
 import time
+import requests
 
 pygame.init()
 
@@ -10,7 +11,6 @@ HEIGHT = 600
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Mini Space Shooter FINAL")
 clock = pygame.time.Clock()
-
 player_img_original = pygame.image.load("spaceship.pod_.1.png")
 player_img = pygame.transform.scale(player_img_original, (80, 80))
 player_width = 80
@@ -27,15 +27,16 @@ final_boss_img = pygame.transform.scale(ufo_img_original, (240, 150))
 player_x = WIDTH // 2 - player_width // 2
 player_y = HEIGHT - 120
 player_speed = 5
+player_name = ""
 
+score = 0
 
 bullets = []
 bullet_speed = 10
 bullet_offsets = [-20, 0, 20]
 
-
 ufo_list = []
-ufo_speed = 1.2     
+ufo_speed = 1.2
 ufo_spawn_rate = 45
 ufo_per_spawn = 1
 
@@ -62,6 +63,47 @@ big_font = pygame.font.SysFont("Arial", 64)
 small_font = pygame.font.SysFont("Arial", 22)
 
 
+def get_player_name():
+    global player_name
+    input_text = ""
+    asking = True
+
+    while asking:
+        screen.fill((0, 0, 0))
+
+        title = big_font.render("Enter Your Name:", True, (255, 255, 255))
+        screen.blit(title, (WIDTH//2 - title.get_width()//2, HEIGHT//2 - 100))
+
+        name_surf = font.render(input_text, True, (150, 200, 255))
+        screen.blit(name_surf, (WIDTH//2 - name_surf.get_width()//2, HEIGHT//2))
+
+        pygame.display.update()
+
+        for e in pygame.event.get():
+            if e.type == pygame.QUIT:
+                pygame.quit(); sys.exit()
+            if e.type == pygame.KEYDOWN:
+                if e.key == pygame.K_RETURN and len(input_text) > 0:
+                    player_name = input_text
+                    asking = False
+                elif e.key == pygame.K_BACKSPACE:
+                    input_text = input_text[:-1]
+                else:
+                    if len(input_text) < 12:
+                        input_text += e.unicode
+
+
+def send_score():
+
+    try:
+        requests.post(
+            "https://bozdemirummu.app.n8n.cloud/webhook/47973814-e6dd-4f5d-adf4-1a08ea90b26a",
+            json={"player_name": player_name, "score": score}
+        )
+    except Exception as e:
+        print("Could not send score:", e)
+
+
 def fire_bullets():
     for off in bullet_offsets:
         bullets.append([player_x + player_width//2 + off, player_y])
@@ -79,6 +121,7 @@ def reset_game():
     global final_boss_active, final_boss_hp
     global level, level_start_time, ufo_per_spawn
     global boss_x, boss_y, final_boss_x, final_boss_y
+    global score
     global game_over
 
     lives = 3
@@ -96,9 +139,9 @@ def reset_game():
     final_boss_y = -200
 
     level = 1
+    score = 0
     ufo_per_spawn = 1
     level_start_time = time.time()
-
     game_over = False
 
 
@@ -109,11 +152,12 @@ def update_spawn_by_level(lv):
     elif lv == 4: return 2
     elif lv == 5: return 1
     elif lv == 6: return 1
-    elif lv == 7: return 1   
+    elif lv == 7: return 1
     else: return 0
 
-
+get_player_name()
 spawn_ufos(1)
+
 
 while True:
 
@@ -130,6 +174,8 @@ while True:
         screen.blit(retry_txt, (WIDTH//2 - retry_txt.get_width()//2, HEIGHT//2 + 5))
 
         pygame.display.update()
+
+        send_score()
 
         waiting = True
         while waiting:
@@ -156,6 +202,8 @@ while True:
 
         pygame.display.update()
 
+        send_score()
+
         waiting = True
         while waiting:
             for e in pygame.event.get():
@@ -175,13 +223,11 @@ while True:
         if level == 5 and not boss_active:
             boss_active = True
             boss_hp = 40
-            boss_x = WIDTH//2 - 80
             boss_y = -150
 
         if level == 8 and not final_boss_active:
             final_boss_active = True
             final_boss_hp = 120
-            final_boss_x = WIDTH//2 - 120
             final_boss_y = -200
 
     if not boss_active and not final_boss_active:
@@ -216,22 +262,22 @@ while True:
                 game_over = True
             continue
 
+        for b in bullets[:]:
+            if u[0] <= b[0] <= u[0] + ufo_width and u[1] <= b[1] <= u[1] + ufo_height:
+                bullets.remove(b)
+                ufo_list.remove(u)
+                score += 50
+                break
+
         if (player_x < u[0] + ufo_width and
             player_x + player_width > u[0] and
             player_y < u[1] + ufo_height and
             player_y + player_height > u[1]):
-
             ufo_list.remove(u)
             lives -= 1
             if lives <= 0:
                 game_over = True
             continue
-
-        for b in bullets[:]:
-            if u[0] <= b[0] <= u[0]+ufo_width and u[1] <= b[1] <= u[1]+ufo_height:
-                bullets.remove(b)
-                ufo_list.remove(u)
-                break
 
     if boss_active:
         if boss_y < 60:
@@ -242,11 +288,12 @@ while True:
                 boss_speed *= -1
 
         for b in bullets[:]:
-            if boss_x <= b[0] <= boss_x+160 and boss_y <= b[1] <= boss_y+100:
+            if boss_x <= b[0] <= boss_x + 160 and boss_y <= b[1] <= boss_y + 100:
                 bullets.remove(b)
                 boss_hp -= 1
                 if boss_hp <= 0:
                     boss_active = False
+                    score += 100
                 break
 
     if final_boss_active:
@@ -258,12 +305,13 @@ while True:
                 final_boss_speed *= -1
 
         for b in bullets[:]:
-            if final_boss_x <= b[0] <= final_boss_x+240 and final_boss_y <= b[1] <= final_boss_y+150:
+            if final_boss_x <= b[0] <= final_boss_x + 240 and final_boss_y <= b[1] <= final_boss_y + 150:
                 bullets.remove(b)
                 final_boss_hp -= 1
                 if final_boss_hp <= 0:
                     final_boss_active = False
-                    level = 9  
+                    score += 200
+                    level = 9
                 break
 
     screen.fill((0, 0, 0))
@@ -286,6 +334,7 @@ while True:
 
     screen.blit(font.render(f"LEVEL: {level}", True, (255,255,255)), (10, 40))
     screen.blit(font.render(f"LIVES: {lives}", True, (255,255,255)), (10, 10))
+    screen.blit(font.render(f"SCORE: {score}", True, (255,255,0)), (10, 70))
 
     pygame.display.update()
     clock.tick(60)
